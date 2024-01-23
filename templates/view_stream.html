@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>View Live Stream</title>
+
+  <link href="static/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+  <link href="static/css/sb-admin-2.min.css" rel="stylesheet">
+
+  <style>
+    input[style="display: none"] {
+      visibility: hidden;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 0.5rem 1rem;
+      border: 1px solid #ccc;
+      border-radius: 0.25rem;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+
+<body class="bg-gradient-primary">
+  <div class="container">
+    <div class="card o-hidden border-0 shadow-lg my-5">
+      <div class="card-body p-0">
+
+        <div class="row">
+          <div class="col-lg-3"></div>
+          <div class="col-lg-6">
+            <div class="p-5">
+              <div class="text-center">
+                <h1 class="h4 text-gray-900 mb-4">View Live Stream!</h1>
+              </div>
+
+              <form class="user" action="/submit_view_stream" method="POST">
+                <div class="form-group">
+                  <label class="h6 text-gray-900 mb-4">Select Camera</label>
+                  <select name="camera_id" class="form-control">
+                    {% for id in camera_ids %}
+                      <option value="{{ id }}">{{ id }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              
+                <div class="form-group model_name">
+                  <label class="h6 text-gray-900 mb-4">Select Model</label>
+                  <select name="model_option" class="form-control">
+                    {% for model_path in model_paths %}
+                      <option value="{{ model_path}}">{{ model_path}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              
+                <div class="form-group fall_detection_frame_input" style="display: none;">
+                  <label class="h6 text-gray-900 mb-4">Fall Detection Frames</label>
+
+                  <select name="fall_detection_frames" class="form-control" style="display: none;">
+                    {% for fall_frame_num in fall_frame_num %}
+                      <option value="{{ fall_frame_num}}">{{ fall_frame_num}}</option>
+                    {% endfor %}
+                  </select>
+                  <!-- <input type="number" name="fall_detection_frames" class="form-control" style="display: none;"> -->
+                </div>
+              
+                <div class="form-group smoke_detection_frame_input" style="display: none;">
+                  <label class="h6 text-gray-900 mb-4">Smoke and Fire Detection Frames</label>
+                  <select name="smoke_detection_frames" class="form-control" style="display: none;">
+                    {% for fire_frame_num in fire_frame_num %}
+                      <option value="{{ fire_frame_num}}">{{ fire_frame_num}}</option>
+                    {% endfor %}
+                  </select>
+                  <!-- <input type="number" name="smoke_detection_frames" class="form-control" style="display: none;"> -->
+                </div>
+
+                <div class="form-group theft_detection_frame_input" style="display: none;">
+                    <label class="h6 text-gray-900 mb-4">Theft Detection Frames</label>
+                    <select name="theft_detection_frames" class="form-control" style="display: none;">
+                        {% for theft_frame_num in theft_frame_num %}
+                          <option value="{{ theft_frame_num}}">{{ theft_frame_num}}</option>
+                        {% endfor %}
+                      </select>
+                    <!-- <input type="number" name="theft_detection_frames" class="form-control" style="display: none;"> -->
+                  </div>
+              
+                <button type="submit" class="btn btn-primary btn-user btn-block">
+                  View Stream
+                </button>
+              </form>
+              
+
+            </div>
+          </div>
+          <div class="col-lg-3"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+
+  <script>
+    // Get the select element for the model name.
+    const modelSelect = document.querySelector('select[name="model_option"]');
+  
+    // Get the input elements for the fall detection and smoke detection frames.
+    const fallDetectionFramesInput = document.querySelector('select[name="fall_detection_frames"]');
+    const smokeDetectionFramesInput = document.querySelector('select[name="smoke_detection_frames"]');
+    const theft_detection_framesInput = document.querySelector('select[name="theft_detection_frames"]');
+
+  
+    // Add an event listener to the model select element.
+    modelSelect.addEventListener('change', function() {
+      // Get the selected model name.
+      const selectedModelName = modelSelect.value;
+  
+      // Show the selected model's input field and label, and hide the other input field and label.
+      if (selectedModelName === 'Fall Detection') {
+        fallDetectionFramesInput.style.display = 'block';
+        fallDetectionFramesInput.parentNode.style.display = 'block';
+        smokeDetectionFramesInput.style.display = 'none';
+        smokeDetectionFramesInput.parentNode.style.display = 'none';
+        theft_detection_framesInput.style.display = 'none' ;
+        theft_detection_framesInput.parentNode.style.display ='none' ;
+      } else if (selectedModelName === 'smoke and fire detection') {
+        fallDetectionFramesInput.style.display = 'none';
+        fallDetectionFramesInput.parentNode.style.display = 'none';
+        smokeDetectionFramesInput.style.display = 'block';
+        smokeDetectionFramesInput.parentNode.style.display = 'block';
+        theft_detection_framesInput.style.display = 'none' ;
+        theft_detection_framesInput.parentNode.style.display = 'none' ;
+      }else if (selectedModelName === 'Theft Detection') {
+        fallDetectionFramesInput.style.display = 'none';
+        fallDetectionFramesInput.parentNode.style.display = 'none';
+        smokeDetectionFramesInput.style.display = 'none';
+        smokeDetectionFramesInput.parentNode.style.display = 'none';
+        theft_detection_framesInput.style.display = 'block' ;
+        theft_detection_framesInput.parentNode.style.display ='block' ;
+      } 
+      
+      
+      else {
+        fallDetectionFramesInput.style.display = 'none';
+        fallDetectionFramesInput.parentNode.style.display = 'none';
+        smokeDetectionFramesInput.style.display = 'none';
+        smokeDetectionFramesInput.parentNode.style.display = 'none';
+        theft_detection_framesInput.style.display = 'none' ;
+        theft_detection_framesInput.parentNode.style.display = 'none' ;
+      }
+    });
+  </script>
+  
+
+    <!-- Bootstrap core JavaScript  -->
+    <script src="static/vendor/jquery/jquery.min.js"></script>
+    <script src="static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- Core plugin JavaScript -->
+    <script src="static/vendor/jquery-easing/jquery.easing.min.js"></script>
+    <!-- Custom scripts for all pages -->
+    <script src="static/js/sb-admin-2.min.js"></script>
+
+</body>
+
+</html> 

@@ -1,0 +1,8 @@
+flask
+pymongo
+tabulate
+Pillow
+opencv-python
+requests
+matplotlib
+pandas
